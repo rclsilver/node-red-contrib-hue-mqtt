@@ -1,0 +1,37 @@
+<script type="text/x-red" data-template-name="hue-mqtt-in">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="hue-mqtt-in.config.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]hue-mqtt-in.config.input-name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-bridge"><i class="fa fa-server"></i> Bridge</label>
+        <input type="text" id="node-input-bridge">
+    </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('hue-mqtt-in', {
+        category: 'Hue MQTT',
+        color: '#347aeb',
+        defaults: {
+            name: { value: '' },
+            bridge: { type: 'hue-bridge', required: true },
+        },
+        inputs: 1,
+        outputs: 1,
+        inputLabels: function () {
+            return this._('hue-mqtt-in.node.input');
+        },
+        outputLabels: function () {
+            return this._('hue-mqtt-in.node.output');
+        },
+        align: 'left',
+        icon: 'inject.svg',
+        paletteLabel: function () {
+            return this._('hue-mqtt-in.node.title');
+        },
+        label: function () {
+            return this.name || this._('hue-mqtt-in.node.title');
+        },
+    });
+</script>

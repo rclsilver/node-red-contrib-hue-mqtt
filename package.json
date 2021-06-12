@@ -1,0 +1,50 @@
+{
+    "name": "node-red-contrib-hue-mqtt",
+    "version": "1.0.0",
+    "description": "",
+    "author": "Thomas Bétrancourt <thomas@betrancourt.net>",
+    "license": "Apache-2.0",
+    "maintainers": [
+        "Thomas Bétrancourt <thomas@betrancourt.net>"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/rclsilver/node-red-contrib-hue-mqtt.git"
+    },
+    "bugs": {
+        "url": "https://github.com/rclsilver/node-red-contrib-hue-mqtt/issues"
+    },
+    "keywords": [
+        "node-red",
+        "node-red-contrib",
+        "contrib",
+        "philips",
+        "hue",
+        "smart-home",
+        "home-automation",
+        "api",
+        "iot"
+    ],
+    "node-red": {
+        "nodes": {
+            "hue-bridge": "hue-mqtt/hue-bridge.js",
+            "hue-mqtt-in": "hue-mqtt/hue-mqtt-in.js",
+            "hue-cache": "hue-mqtt/hue-cache.js",
+            "hue-temperature": "hue-mqtt/hue-temperature.js",
+            "hue-motion": "hue-mqtt/hue-motion.js",
+            "hue-group": "hue-mqtt/hue-group.js",
+            "hue-brightness": "hue-mqtt/hue-brightness.js",
+            "hue-light": "hue-mqtt/hue-light.js",
+            "hue-switch": "hue-mqtt/hue-switch.js",
+            "hue-scene": "hue-mqtt/hue-scene.js"
+        },
+        "publishConfig": {
+            "access": "public"
+        }
+    },
+    "dependencies": {
+        "huejay": "^1.9.0",
+        "moment": "^2.29.1",
+        "rgb-hex": "^3.0.0"
+    }
+}

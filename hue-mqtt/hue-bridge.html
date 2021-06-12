@@ -1,0 +1,102 @@
+<script type="text/x-red" data-template-name="hue-bridge">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> <span data-i18n="hue-bridge.config.name"></span></label>
+        <input type="text" id="node-config-input-name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-bridge"><i class="fa fa-server"></i> Bridge IP</label>
+        <div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input type="text" id="node-config-input-bridge" placeholder="X.X.X.X[:PORT]" style="width: 100%"/>
+            </div>
+            <a id="node-node-config-input-bridge-scan" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-key"><i class="fa fa-key"></i> <span data-i18n="hue-bridge.config.key"></span></label>
+        <input type="text" id="node-config-input-key">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-interval"><i class="fa fa-clock-o"></i> <span data-i18n="hue-bridge-config.config.interval"></span></label>
+        <input type="text" id="node-config-input-interval" placeholder="3000">
+    </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('hue-bridge', {
+        category: 'config',
+        color: '#c7d8d8',
+        defaults: {
+            name: { value: 'Hue Bridge', required: true },
+            bridge: { value: '', required: true },
+            key: { value: '', required: true },
+            interval: {
+                value: 60000,
+                required: true,
+                validate: function (v) {
+                    return (/^[0-9]+/.test(v) && parseInt(v, 10) >= 500);
+                }
+            }
+        },
+        icon: 'hue-bridge-config.png',
+        paletteLabel: function () {
+            return this._('hue-bridge.node.title');
+        },
+        label: function () {
+            return this.name;
+        },
+        oneditprepare: function () {
+            var node = this;
+
+            function manual() {
+                var current = $('#node-config-input-bridge').val();
+                $('#node-config-input-bridge').replaceWith('<input type="text" id="node-config-input-bridge" style="width: 100%"/>');
+                $('#node-config-input-bridge').val(current);
+            }
+
+            function search() {
+                const current = $('#node-config-input-bridge').val();
+                $('#node-config-input-bridge').replaceWith('<select id="node-config-input-bridge" style="width: 100%"></select>');
+                $('#node-config-input-bridge').append('<option selected="selected" value="null">' + node._("hue-bridge.config.searching") + '</option>');
+
+                $.get('hue/bridges').done(data => {
+                    var bridges = JSON.parse(data);
+
+                    if (bridges.length <= 0) {
+                        RED.notify(node._('hue-bridge.config.none-found'), 'error');
+                    }
+
+                    // Clear select component
+                    $('#node-config-input-bridge').empty();
+
+                    // Add found sensors into the select component
+                    bridges.forEach(function (bridge) {
+                        $('#node-config-input-bridge').append(`<option value="${bridge.ip}">${bridge.ip} (${bridge.id})</option>`);
+                    });
+
+                    // Select the current value
+                    $('#node-config-input-bridge').val(current);
+                }).fail(function () {
+                    RED.notify(node._('hue-bridge.config.unknown-error'), 'error');
+                });
+            }
+
+            $(document).on('change', '#node-config-input-bridge', function () {
+                var bridgeName = $('#node-config-input-bridge option:selected').text();
+                if (bridgeName.length > 0) {
+                    $('#node-input-name').val(bridgeName);
+                }
+            });
+
+            $('#node-node-config-input-bridge-scan').click(function () {
+                if ($('#node-config-input-bridge').prop('tagName') === 'INPUT') {
+                    search();
+                } else {
+                    manual();
+                }
+            });
+        },
+    });
+</script>

@@ -1,0 +1,40 @@
+<script type="text/x-red" data-template-name="hue-cache">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="hue-cache.config.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]hue-cache.config.input-name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-bridge"><i class="fa fa-server"></i> Bridge</label>
+        <input type="text" id="node-input-bridge">
+    </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('hue-cache', {
+        category: 'Hue MQTT',
+        color: '#ff4242',
+        defaults: {
+            name: { value: '' },
+            bridge: { type: 'hue-bridge', required: true },
+        },
+        inputs: 1,
+        outputs: 2,
+        inputLabels: function () {
+            return this._('hue-cache.node.input');
+        },
+        outputLabels: function (i) {
+            return [
+                this._('hue-cache.node.output-initial'),
+                this._('hue-cache.node.output-refresh'),
+            ][i];
+        },
+        align: 'left',
+        icon: 'refresh.svg',
+        paletteLabel: function () {
+            return this._('hue-cache.node.title');
+        },
+        label: function () {
+            return this.name || this._('hue-cache.node.title');
+        },
+    });
+</script>

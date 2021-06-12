@@ -1,0 +1,100 @@
+<script type="text/x-red" data-template-name="hue-switch">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="hue-switch.config.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]hue-switch.config.input-name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-bridge"><i class="fa fa-server"></i> Bridge</label>
+        <input type="text" id="node-input-bridge">
+    </div>
+    <div class="form-row">
+        <label for="node-input-sensor"><i class="fa fa-hand-pointer-o"></i> <span data-i18n="hue-switch.config.sensor"></span></label>
+        <div style="display: inline-block; position: relative; width: 70%; height: 20px;">
+            <div style="position: absolute; left: 0px; right: 40px;">
+                <input type="text" id="node-input-sensor" placeholder="1" style="width: 100%"/>
+            </div>
+            <a id="node-config-input-scan" class="editor-button" style="position: absolute; right: 0px; top: 0px;">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('hue-switch', {
+        category: 'Hue MQTT',
+        color: '#65bff7',
+        defaults: {
+            name: { value: '' },
+            bridge: { type: 'hue-bridge', required: true },
+            sensor: { value: '', required: false },
+        },
+        inputs: 0,
+        outputs: 1,
+        outputLabels: function (i) {
+            return this._('hue-switch.node.output');
+        },
+        align: 'right',
+        icon: 'hue-switch.png',
+        paletteLabel: function () {
+            return this._('hue-switch.node.title');
+        },
+        label: function () {
+            return this.name || this._('hue-switch.node.title');
+        },
+        oneditprepare: function () {
+            var node = this;
+
+            function manual() {
+                var current = $('#node-input-sensor').val();
+                $('#node-input-sensor').replaceWith('<input type="text" id="node-input-sensor" style="width: 100%"/>');
+                $('#node-input-sensor').val(current);
+            }
+
+            function search() {
+                const current = $('#node-input-sensor').val();
+                $('#node-input-sensor').replaceWith('<select id="node-input-sensor" style="width: 100%"></select>');
+                $('#node-input-sensor').append('<option selected="selected" value="null">' + node._("hue-switch.config.searching") + '</option>');
+
+                const bridge = RED.nodes.node($('#node-input-bridge option:selected').val());
+                $.get('hue/sensors', { bridge: bridge.bridge, key: bridge.key, type: 'ZLLSwitch' })
+                    .done(data => {
+                        var results = JSON.parse(data);
+
+                        if (results.length <= 0) {
+                            RED.notify(node._('hue-switch.config.none-found'), 'error');
+                        }
+
+                        // Clear select component
+                        $('#node-input-sensor').empty();
+
+                        // Add found sensors into the select component
+                        results.forEach(function (sensor) {
+                            $('#node-input-sensor').append(`<option value="${sensor.id}">${sensor.name}</option>`);
+                        });
+
+                        // Select the current value
+                        $('#node-input-sensor').val(current);
+                    })
+                    .fail(function () {
+                        RED.notify(node._('hue-switch.config.unknown-error'), 'error');
+                    });
+            }
+
+            $(document).on('change', '#node-input-sensor', function () {
+                var sensorName = $('#node-input-sensor option:selected').text();
+                if (sensorName.length > 0) {
+                    $('#node-input-name').val(sensorName);
+                }
+            });
+
+            $('#node-config-input-scan').click(function () {
+                if ($('#node-input-sensor').prop('tagName') === 'INPUT') {
+                    search();
+                } else {
+                    manual();
+                }
+            });
+        },
+    });
+</script>
