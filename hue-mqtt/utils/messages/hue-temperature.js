@@ -14,6 +14,8 @@ module.exports = class HueTemperatureMessage {
                 updated: moment.utc(sensor.state.lastUpdated).local().format()
             },
 
+            type: 'temperature',
+
             info: {
                 id: sensor.id,
                 uniqueId: sensor.uniqueId,

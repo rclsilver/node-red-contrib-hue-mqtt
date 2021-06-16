@@ -1,17 +1,21 @@
-const moment = require('moment');
-const rgb = require('../rgb');
-const rgbHex = require('rgb-hex');
+const moment = require("moment");
 
 module.exports = class HueLightMessage {
     constructor(light) {
         this.message = {
             payload: {
-                on: (light.reachable) ? light.on : false,
-                brightness: (light.reachable) ? ((light.brightness) ? Math.round((100 / 254) * light.brightness) : -1) : 0,
-                brightnessLevel: (light.reachable) ? light.brightness : 0,
+                on: light.reachable ? light.on : false,
+                brightness: light.reachable
+                    ? light.brightness
+                        ? Math.round((100 / 254) * light.brightness)
+                        : -1
+                    : 0,
+                brightnessLevel: light.reachable ? light.brightness : 0,
                 reachable: light.reachable,
                 updated: moment().format(),
             },
+
+            type: "light",
 
             info: {
                 id: light.id,
@@ -19,7 +23,7 @@ module.exports = class HueLightMessage {
                 name: light.name,
                 type: light.type,
                 softwareVersion: light.softwareVersion,
-            }
+            },
         };
 
         if (light.modelId) {
@@ -34,10 +38,10 @@ module.exports = class HueLightMessage {
         }
 
         if (light.xy) {
-            const rgbColor = rgb.convertXYtoRGB(light.xy[0], light.xy[1], light.brightness);
-
-            this.message.payload.rgb = rgbColor;
-            this.message.payload.hex = rgbHex(rgbColor[0], rgbColor[1], rgbColor[2]);
+            this.message.payload.xy =
+                light.xy instanceof Array
+                    ? { x: light.xy[0], y: light.xy[1] }
+                    : light.xy;
         }
 
         if (light.colorTemp) {

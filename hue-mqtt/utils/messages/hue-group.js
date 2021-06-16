@@ -1,6 +1,4 @@
 const moment = require('moment');
-const rgb = require('../rgb');
-const rgbHex = require('rgb-hex');
 
 module.exports = class HueGroupMessage {
     constructor(group, scene = undefined) {
@@ -13,6 +11,8 @@ module.exports = class HueGroupMessage {
                 brightnessLevel: group.brightness,
                 updated: moment().format(),
             },
+
+            type: 'group',
 
             info: {
                 id: group.id,
@@ -34,10 +34,10 @@ module.exports = class HueGroupMessage {
         }
 
         if (group.xy) {
-            const rgbColor = rgb.convertXYtoRGB(group.xy[0], group.xy[1], group.brightness);
-
-            this.message.payload.rgb = rgbColor;
-            this.message.payload.hex = rgbHex(rgbColor[0], rgbColor[1], rgbColor[2]);
+            this.message.payload.xy = {
+                x: group.xy[0],
+                y: group.xy[1],
+            };
         }
 
         if (group.colorTemp) {

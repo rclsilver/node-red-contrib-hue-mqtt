@@ -13,6 +13,8 @@ module.exports = class HueSwitchMessage {
                 updated: moment.utc(sensor.state.lastUpdated).local().format(),
             },
 
+            type: 'switch',
+
             info: {
                 id: sensor.id,
                 uniqueId: sensor.uniqueId,

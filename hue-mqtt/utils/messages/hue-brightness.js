@@ -15,6 +15,8 @@ module.exports = class HueBrightnessMessage {
                 updated: moment.utc(sensor.state.lastUpdated).local().format(),
             },
 
+            type: 'brightness',
+
             info: {
                 id: sensor.id,
                 uniqueId: sensor.uniqueId,

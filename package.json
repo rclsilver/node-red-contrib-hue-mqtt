@@ -43,8 +43,7 @@
         }
     },
     "dependencies": {
-        "huejay": "^1.9.0",
-        "moment": "^2.29.1",
-        "rgb-hex": "^3.0.0"
+        "huejay": "rclsilver/huejay",
+        "moment": "^2.29.1"
     }
 }

@@ -1,0 +1,14 @@
+{
+    "hue-brightness": {
+        "config": {
+            "name": "Name",
+            "bridge": "Bridge",
+            "sensor": "Sensor"
+        },
+        "node": {
+            "title": "Hue Brightness",
+            "not-configured": "not configured",
+            "output": "brightness data"
+        }
+    }
+}

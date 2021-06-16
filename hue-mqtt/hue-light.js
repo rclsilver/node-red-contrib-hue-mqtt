@@ -2,7 +2,6 @@ module.exports = function (RED) {
     function HueLight(config) {
         const node = this;
         const bridge = RED.nodes.getNode(config.bridge);
-        const rgb = require('./utils/rgb');
         const { HueLightMessage } = require('./utils/messages');
 
         RED.nodes.createNode(this, config);
@@ -47,16 +46,8 @@ module.exports = function (RED) {
                     }
 
                     // Set color
-                    if (light.xy !== undefined) {
-                        // RGB value
-                        if (payload.rgb !== undefined) {
-                            light.xy = rgb.convertRGBtoXY(payload.rgb, false);
-                        }
-
-                        // XY value
-                        if (payload.xy !== undefined) {
-                            light.xy = payload.xy;
-                        }
+                    if (light.xy !== undefined && payload.xy !== undefined) {
+                        light.xy = payload.xy;
                     }
 
                     // Set saturation
@@ -100,6 +91,16 @@ module.exports = function (RED) {
                     done(error);
                 }
             });
+        });
+
+        bridge.events.on('initial', cache => {
+            if ('light' in cache) {
+                cache.light.forEach(light => {
+                    if (!config.light || config.light == light.id) {
+                        node.send(new HueLightMessage(light).msg);
+                    }
+                });
+            }
         });
 
         bridge.events.on('light', light => {

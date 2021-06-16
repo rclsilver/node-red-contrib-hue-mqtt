@@ -2,7 +2,6 @@ module.exports = function (RED) {
     function HueGroup(config) {
         const node = this;
         const bridge = RED.nodes.getNode(config.bridge);
-        const rgb = require('./utils/rgb');
         const { HueGroupMessage } = require('./utils/messages');
 
         RED.nodes.createNode(this, config);
@@ -47,16 +46,8 @@ module.exports = function (RED) {
                     }
 
                     // Set color
-                    if (group.xy !== undefined) {
-                        // RGB value
-                        if (payload.rgb !== undefined) {
-                            group.xy = rgb.convertRGBtoXY(payload.rgb, false);
-                        }
-
-                        // XY value
-                        if (payload.xy !== undefined) {
-                            group.xy = payload.xy;
-                        }
+                    if (group.xy !== undefined && payload.xy !== undefined) {
+                        group.xy = payload.xy;
                     }
 
                     // Set saturation

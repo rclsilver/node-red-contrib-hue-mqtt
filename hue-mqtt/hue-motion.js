@@ -46,6 +46,7 @@ module.exports = function (RED) {
             if ('payload' in msg) {
                 var enabled;
                 var sensor;
+                var sensorName;
 
                 if (typeof msg.payload === 'boolean') {
                     enabled = msg.payload;
@@ -56,6 +57,10 @@ module.exports = function (RED) {
 
                     if ('sensor' in msg.payload) {
                         sensor = typeof msg.payload.sensor === 'number' ? msg.payload.sensor.toString() : msg.payload.sensor;
+                    }
+
+                    if (msg.payload.sensorName !== undefined) {
+                        sensorName = msg.payload.sensorName;
                     }
                 }
 
@@ -73,6 +78,10 @@ module.exports = function (RED) {
                                 .filter(sensor => sensor.type === 'ZLLPresence')
                                 .filter(sensor => sensor.config.on != enabled)
                                 .forEach(sensor => {
+                                    if (sensorName && sensorName.toLowerCase() != sensor.name.toLowerCase()) {
+                                        return false;
+                                    }
+
                                     sensor.config.on = enabled;
 
                                     bridge.client.sensors.save(sensor).then(sensor => {

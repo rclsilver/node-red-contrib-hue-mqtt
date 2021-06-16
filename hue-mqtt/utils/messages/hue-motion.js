@@ -13,6 +13,8 @@ module.exports = class HueMotionMessage {
                 updated: (sensor.state.lastUpdated) ? moment.utc(sensor.state.lastUpdated).local().format() : moment().local().format()
             },
 
+            type: 'motion',
+
             info: {
                 id: sensor.id,
                 uniqueId: sensor.uniqueId,
