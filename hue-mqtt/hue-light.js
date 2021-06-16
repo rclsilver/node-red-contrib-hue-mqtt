@@ -14,12 +14,17 @@ module.exports = function (RED) {
         node.on('input', (msg, send, done) => {
             const payload = msg.payload ? msg.payload : {};
             const light = payload.light ? payload.light : config.light;
+            const lightName = payload.lightName;
             const lights = light ?
                 bridge.client.lights.getById(light).then(light => [light]) :
                 bridge.client.lights.getAll();
 
             lights.then(lights => {
                 lights.forEach(light => {
+                    if (lightName !== undefined && lightName.toLowerCase() !== light.name.toLowerCase()) {
+                        return;
+                    }
+
                     // Update the state
                     if (payload.on !== undefined && light.on !== payload.on) {
                         light.on = payload.on;
