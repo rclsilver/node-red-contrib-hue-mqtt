@@ -3,7 +3,6 @@
         "config": {
             "name": "Name",
             "key": "API Key",
-            "missing-ip": "Missing Hue Bridge IP...",
             "interval": "Poll Interval",
             "searching": "Searching for Hue Bridges...",
             "none-found": "No Hue Bridges found!",

@@ -2,12 +2,16 @@ module.exports = function (RED) {
     function HueCache(config) {
         const node = this;
         const bridge = RED.nodes.getNode(config.bridge);
-        const { MessageFactory } = require('./utils/messages');
+        const { MessageFactory } = require("./utils/messages");
 
         RED.nodes.createNode(this, config);
 
         if (bridge == null) {
-            this.status({ fill: 'red', shape: 'ring', text: 'hue-cache.node.not-configured' });
+            this.status({
+                fill: "red",
+                shape: "ring",
+                text: "hue-cache.node.not-configured",
+            });
             return false;
         }
 
@@ -21,9 +25,9 @@ module.exports = function (RED) {
             }, delay);
         };
 
-        bridge.events.on('initial', cache => {
+        bridge.events.on("initial", (cache) => {
             for (let type of Object.keys(cache)) {
-                cache[type].forEach(device => {
+                cache[type].forEach((device) => {
                     const msg = MessageFactory.fromDevice(type, device);
 
                     if (msg) {
@@ -32,15 +36,19 @@ module.exports = function (RED) {
                 });
             }
 
-            node.status({ fill: 'green', shape: 'dot', text: 'hue-cache.node.initialized' });
+            node.status({
+                fill: "green",
+                shape: "dot",
+                text: "hue-cache.node.initialized",
+            });
 
             // reset status after 3 seconds
             node.resetStatus(3000);
         });
 
-        bridge.events.on('refresh', cache => {
+        bridge.events.on("refresh", (cache) => {
             for (let type of Object.keys(cache)) {
-                cache[type].forEach(device => {
+                cache[type].forEach((device) => {
                     const msg = MessageFactory.fromDevice(type, device);
 
                     if (msg) {
@@ -49,17 +57,25 @@ module.exports = function (RED) {
                 });
             }
 
-            node.status({ fill: 'green', shape: 'dot', text: 'hue-cache.node.refreshed' });
+            node.status({
+                fill: "green",
+                shape: "dot",
+                text: "hue-cache.node.refreshed",
+            });
 
             // reset status after 3 seconds
             node.resetStatus(3000);
         });
 
-        bridge.events.on('error', () => {
-            node.status({ fill: 'red', shape: 'ring', text: 'hue-cache.node.error' });
+        bridge.events.on("error", () => {
+            node.status({
+                fill: "red",
+                shape: "ring",
+                text: "hue-cache.node.error",
+            });
         });
 
-        node.on('input', function (msg, send, done) {
+        node.on("input", function (msg, send, done) {
             bridge.poller.execute();
 
             if (done) {
@@ -68,5 +84,5 @@ module.exports = function (RED) {
         });
     }
 
-    RED.nodes.registerType('hue-cache', HueCache);
+    RED.nodes.registerType("hue-cache", HueCache);
 };

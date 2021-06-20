@@ -2,13 +2,17 @@
     "hue-brightness": {
         "config": {
             "name": "Name",
+            "input-name": "Sensor name",
             "bridge": "Bridge",
-            "sensor": "Sensor"
+            "sensor": "Sensor",
+            "searching": "Searching for Hue sensors..."
         },
         "node": {
             "title": "Hue Brightness",
             "not-configured": "not configured",
-            "output": "brightness data"
+            "output": "brightness data",
+            "none-found": "No Hue Sensor found!",
+            "unknown-error": "Something went wrong. Please retry."
         }
     }
 }

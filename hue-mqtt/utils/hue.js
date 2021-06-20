@@ -18,15 +18,17 @@ module.exports = {
                         attributes: {},
                     };
 
-                    Object.keys(event).filter(key => {
-                        return ['id', 'id_v1', 'type'].indexOf(key) === -1;
-                    }).forEach(key => {
-                        device.attributes[key] = event[key];
-                    });
+                    Object.keys(event)
+                        .filter((key) => {
+                            return ["id", "id_v1", "type"].indexOf(key) === -1;
+                        })
+                        .forEach((key) => {
+                            device.attributes[key] = event[key];
+                        });
 
                     return device;
                 }
             }
         }
-    }
+    },
 };

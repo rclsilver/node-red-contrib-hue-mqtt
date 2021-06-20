@@ -21,75 +21,97 @@
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('hue-switch', {
-        category: 'Hue MQTT',
-        color: '#65bff7',
+    RED.nodes.registerType("hue-switch", {
+        category: "Hue MQTT",
+        color: "#65bff7",
         defaults: {
-            name: { value: '' },
-            bridge: { type: 'hue-bridge', required: true },
-            sensor: { value: '', required: false },
+            name: { value: "" },
+            bridge: { type: "hue-bridge", required: true },
+            sensor: { value: "", required: false },
         },
         inputs: 0,
         outputs: 1,
         outputLabels: function (i) {
-            return this._('hue-switch.node.output');
+            return this._("hue-switch.node.output");
         },
-        align: 'right',
-        icon: 'hue-switch.png',
+        align: "right",
+        icon: "hue-switch.png",
         paletteLabel: function () {
-            return this._('hue-switch.node.title');
+            return this._("hue-switch.node.title");
         },
         label: function () {
-            return this.name || this._('hue-switch.node.title');
+            return this.name || this._("hue-switch.node.title");
         },
         oneditprepare: function () {
             var node = this;
 
             function manual() {
-                var current = $('#node-input-sensor').val();
-                $('#node-input-sensor').replaceWith('<input type="text" id="node-input-sensor" style="width: 100%"/>');
-                $('#node-input-sensor').val(current);
+                var current = $("#node-input-sensor").val();
+                $("#node-input-sensor").replaceWith(
+                    '<input type="text" id="node-input-sensor" style="width: 100%"/>'
+                );
+                $("#node-input-sensor").val(current);
             }
 
             function search() {
-                const current = $('#node-input-sensor').val();
-                $('#node-input-sensor').replaceWith('<select id="node-input-sensor" style="width: 100%"></select>');
-                $('#node-input-sensor').append('<option selected="selected" value="null">' + node._("hue-switch.config.searching") + '</option>');
+                const current = $("#node-input-sensor").val();
+                $("#node-input-sensor").replaceWith(
+                    '<select id="node-input-sensor" style="width: 100%"></select>'
+                );
+                $("#node-input-sensor").append(
+                    '<option selected="selected" value="null">' +
+                        node._("hue-switch.config.searching") +
+                        "</option>"
+                );
 
-                const bridge = RED.nodes.node($('#node-input-bridge option:selected').val());
-                $.get('hue/sensors', { bridge: bridge.bridge, key: bridge.key, type: 'ZLLSwitch' })
-                    .done(data => {
+                const bridge = RED.nodes.node(
+                    $("#node-input-bridge option:selected").val()
+                );
+                $.get("hue/sensors", {
+                    bridge: bridge.bridge,
+                    key: bridge.key,
+                    type: "ZLLSwitch",
+                })
+                    .done((data) => {
                         var results = JSON.parse(data);
 
                         if (results.length <= 0) {
-                            RED.notify(node._('hue-switch.config.none-found'), 'error');
+                            RED.notify(
+                                node._("hue-switch.config.none-found"),
+                                "error"
+                            );
                         }
 
                         // Clear select component
-                        $('#node-input-sensor').empty();
+                        $("#node-input-sensor").empty();
 
                         // Add found sensors into the select component
                         results.forEach(function (sensor) {
-                            $('#node-input-sensor').append(`<option value="${sensor.id}">${sensor.name}</option>`);
+                            $("#node-input-sensor").append(
+                                `<option value="${sensor.id}">${sensor.name}</option>`
+                            );
                         });
 
                         // Select the current value
-                        $('#node-input-sensor').val(current);
+                        $("#node-input-sensor").val(current);
                     })
                     .fail(function () {
-                        RED.notify(node._('hue-switch.config.unknown-error'), 'error');
+                        RED.notify(
+                            node._("hue-switch.config.unknown-error"),
+                            "error"
+                        );
                     });
             }
 
-            $(document).on('change', '#node-input-sensor', function () {
-                var sensorName = $('#node-input-sensor option:selected').text();
+            $(document).on("change", "#node-input-sensor", function () {
+                var sensorName = $("#node-input-sensor option:selected").text();
                 if (sensorName.length > 0) {
-                    $('#node-input-name').val(sensorName);
+                    $("#node-input-name").val(sensorName);
                 }
             });
 
-            $('#node-config-input-scan').click(function () {
-                if ($('#node-input-sensor').prop('tagName') === 'INPUT') {
+            $("#node-config-input-scan").click(function () {
+                if ($("#node-input-sensor").prop("tagName") === "INPUT") {
                     search();
                 } else {
                     manual();

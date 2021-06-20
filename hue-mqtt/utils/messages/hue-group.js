@@ -1,4 +1,4 @@
-const moment = require('moment');
+const moment = require("moment");
 
 module.exports = class HueGroupMessage {
     constructor(group, scene = undefined) {
@@ -12,7 +12,7 @@ module.exports = class HueGroupMessage {
                 updated: moment().format(),
             },
 
-            type: 'group',
+            type: "group",
 
             info: {
                 id: group.id,
@@ -20,7 +20,7 @@ module.exports = class HueGroupMessage {
                 name: group.name,
                 type: group.type,
                 class: group.class,
-            }
+            },
         };
 
         if (group.modelId !== undefined) {

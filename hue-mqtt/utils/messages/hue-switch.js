@@ -1,4 +1,4 @@
-const moment = require('moment');
+const moment = require("moment");
 
 module.exports = class HueSwitchMessage {
     constructor(sensor) {
@@ -13,7 +13,7 @@ module.exports = class HueSwitchMessage {
                 updated: moment.utc(sensor.state.lastUpdated).local().format(),
             },
 
-            type: 'switch',
+            type: "switch",
 
             info: {
                 id: sensor.id,
@@ -28,22 +28,19 @@ module.exports = class HueSwitchMessage {
                     name: sensor.model.name,
                     type: sensor.model.type,
                 },
-            }
+            },
         };
     }
 
     getButtonName(event) {
         if (event < 2000) {
-            return 'on';
-        }
-        else if (event < 3000) {
-            return 'dim_up';
-        }
-        else if (event < 4000) {
-            return 'dim_down';
-        }
-        else {
-            return 'off';
+            return "on";
+        } else if (event < 3000) {
+            return "dim_up";
+        } else if (event < 4000) {
+            return "dim_down";
+        } else {
+            return "off";
         }
     }
 
@@ -51,16 +48,13 @@ module.exports = class HueSwitchMessage {
         const action = parseInt(event.toString().substring(3));
 
         if (action == 0) {
-            return 'pressed';
-        }
-        else if (action == 1) {
-            return 'holded';
-        }
-        else if (action == 2) {
-            return 'short_release';
-        }
-        else {
-            return 'long_release';
+            return "pressed";
+        } else if (action == 1) {
+            return "holded";
+        } else if (action == 2) {
+            return "short_release";
+        } else {
+            return "long_release";
         }
     }
 

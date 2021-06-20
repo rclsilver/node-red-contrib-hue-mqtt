@@ -32,124 +32,160 @@
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('hue-scene', {
-        category: 'Hue MQTT',
-        color: '#ff823a',
+    RED.nodes.registerType("hue-scene", {
+        category: "Hue MQTT",
+        color: "#ff823a",
         defaults: {
-            name: { value: '' },
-            bridge: { type: 'hue-bridge', required: true },
-            group: { value: '', required: false },
-            scene: { value: '', required: false },
+            name: { value: "" },
+            bridge: { type: "hue-bridge", required: true },
+            group: { value: "", required: false },
+            scene: { value: "", required: false },
         },
         inputs: 1,
         outputs: 1,
         inputLabels: function (i) {
-            return this._('hue-scene.node.input');
+            return this._("hue-scene.node.input");
         },
         outputLabels: function (i) {
-            return this._('hue-scene.node.output');
+            return this._("hue-scene.node.output");
         },
-        align: 'right',
-        icon: 'hue-scene.png',
+        align: "right",
+        icon: "hue-scene.png",
         paletteLabel: function () {
-            return this._('hue-scene.node.title');
+            return this._("hue-scene.node.title");
         },
         label: function () {
-            return this.name || this._('hue-scene.node.title');
+            return this.name || this._("hue-scene.node.title");
         },
         oneditprepare: function () {
             var node = this;
 
             function manualGroup() {
-                var current = $('#node-input-group').val();
-                $('#node-input-group').replaceWith('<input type="text" id="node-input-group" style="width: 100%"/>');
-                $('#node-input-group').val(current);
+                var current = $("#node-input-group").val();
+                $("#node-input-group").replaceWith(
+                    '<input type="text" id="node-input-group" style="width: 100%"/>'
+                );
+                $("#node-input-group").val(current);
             }
 
             function manualScene() {
-                var current = $('#node-input-scene').val();
-                $('#node-input-scene').replaceWith('<input type="text" id="node-input-scene" style="width: 100%"/>');
-                $('#node-input-scene').val(current);
+                var current = $("#node-input-scene").val();
+                $("#node-input-scene").replaceWith(
+                    '<input type="text" id="node-input-scene" style="width: 100%"/>'
+                );
+                $("#node-input-scene").val(current);
             }
 
             function searchGroup() {
-                const current = $('#node-input-group').val();
-                const bridge = RED.nodes.node($('#node-input-bridge option:selected').val());
+                const current = $("#node-input-group").val();
+                const bridge = RED.nodes.node(
+                    $("#node-input-bridge option:selected").val()
+                );
 
-                $('#node-input-group').replaceWith('<select id="node-input-group" style="width: 100%" disabled="disabled"></select>');
-                $('#node-input-group').append('<option selected="selected" value="null">' + node._('hue-scene.config.searching') + '</option>');
+                $("#node-input-group").replaceWith(
+                    '<select id="node-input-group" style="width: 100%" disabled="disabled"></select>'
+                );
+                $("#node-input-group").append(
+                    '<option selected="selected" value="null">' +
+                        node._("hue-scene.config.searching") +
+                        "</option>"
+                );
 
-                $.get('hue/groups', { bridge: bridge.bridge, key: bridge.key })
-                    .done(data => {
+                $.get("hue/groups", { bridge: bridge.bridge, key: bridge.key })
+                    .done((data) => {
                         var results = JSON.parse(data);
 
                         if (results.length <= 0) {
-                            RED.notify(node._('hue-scene.config.no-group-found'), 'error');
+                            RED.notify(
+                                node._("hue-scene.config.no-group-found"),
+                                "error"
+                            );
                         }
 
                         // Clear select component
-                        $('#node-input-group').empty();
+                        $("#node-input-group").empty();
 
                         // Remove disabled state
-                        $('#node-input-group').removeAttr('disabled');
+                        $("#node-input-group").removeAttr("disabled");
 
                         // Add found sensors into the select component
                         results.forEach((group) => {
-                            $('#node-input-group').append(`<option value="${group.id}">${group.name}</option>`);
+                            $("#node-input-group").append(
+                                `<option value="${group.id}">${group.name}</option>`
+                            );
                         });
 
                         // Select the current value
-                        $('#node-input-group').val(current);
+                        $("#node-input-group").val(current);
                     })
                     .fail(() => {
-                        RED.notify(node._('hue-scene.config.unknown-error'), 'error');
+                        RED.notify(
+                            node._("hue-scene.config.unknown-error"),
+                            "error"
+                        );
                     });
             }
 
             function searchScene() {
-                const current = $('#node-input-scene').val();
-                const bridge = RED.nodes.node($('#node-input-bridge option:selected').val());
+                const current = $("#node-input-scene").val();
+                const bridge = RED.nodes.node(
+                    $("#node-input-bridge option:selected").val()
+                );
 
-                $('#node-input-scene').replaceWith('<select id="node-input-scene" style="width: 100%" disabled="disabled"></select>');
-                $('#node-input-scene').append('<option selected="selected" value="null">' + node._('hue-scene.config.searching') + '</option>');
+                $("#node-input-scene").replaceWith(
+                    '<select id="node-input-scene" style="width: 100%" disabled="disabled"></select>'
+                );
+                $("#node-input-scene").append(
+                    '<option selected="selected" value="null">' +
+                        node._("hue-scene.config.searching") +
+                        "</option>"
+                );
 
-                $.get('hue/scenes', { bridge: bridge.bridge, key: bridge.key })
-                    .done(data => {
+                $.get("hue/scenes", { bridge: bridge.bridge, key: bridge.key })
+                    .done((data) => {
                         var results = JSON.parse(data);
 
                         if (results.length <= 0) {
-                            RED.notify(node._('hue-scene.config.no-scene-found'), 'error');
+                            RED.notify(
+                                node._("hue-scene.config.no-scene-found"),
+                                "error"
+                            );
                         }
 
                         // Clear select component
-                        $('#node-input-scene').empty();
+                        $("#node-input-scene").empty();
 
                         // Remove disabled state
-                        $('#node-input-scene').removeAttr('disabled');
+                        $("#node-input-scene").removeAttr("disabled");
 
                         // Add found sensors into the select component
                         results.forEach((scene) => {
-                            $('#node-input-scene').append(`<option value="${scene.id}">${scene.name}</option>`);
+                            $("#node-input-scene").append(
+                                `<option value="${scene.id}">${scene.name}</option>`
+                            );
                         });
 
                         // Select the current value
-                        $('#node-input-scene').val(current);
+                        $("#node-input-scene").val(current);
                     })
                     .fail(() => {
-                        RED.notify(node._('hue-scene.config.unknown-error'), 'error');
+                        RED.notify(
+                            node._("hue-scene.config.unknown-error"),
+                            "error"
+                        );
                     });
             }
 
-            $('#node-config-input-group-scan').click(() => {
-                if ($('#node-input-group').prop('tagName') === 'INPUT') {
+            $("#node-config-input-group-scan").click(() => {
+                if ($("#node-input-group").prop("tagName") === "INPUT") {
                     searchGroup();
                 } else {
                     manualGroup();
                 }
             });
 
-            $('#node-config-input-scene-scan').click(() => {
-                if ($('#node-input-scene').prop('tagName') === 'INPUT') {
+            $("#node-config-input-scene-scan").click(() => {
+                if ($("#node-input-scene").prop("tagName") === "INPUT") {
                     searchScene();
                 } else {
                     manualScene();

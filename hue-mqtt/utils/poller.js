@@ -1,4 +1,4 @@
-const events = require('events');
+const events = require("events");
 
 module.exports = class {
     constructor(interval, callback) {
@@ -14,7 +14,7 @@ module.exports = class {
             this.enabled = true;
             this.next = setTimeout(() => this.execute(), this.interval);
         }
-        this.events.emit('started');
+        this.events.emit("started");
     }
 
     stop() {
@@ -25,7 +25,7 @@ module.exports = class {
         if (this.enabled) {
             this.enabled = false;
         }
-        this.events.emit('stopped');
+        this.events.emit("stopped");
     }
 
     execute() {
@@ -34,15 +34,18 @@ module.exports = class {
             this.next = null;
         }
 
-        this.callback().then(() => {
-            this.events.emit('success');
-        }).catch(error => {
-            this.events.emit('error', error);
-        }).finally(() => {
-            if (this.enabled) {
-                this.next = setTimeout(() => this.execute(), this.interval);
-            }
-        });
+        this.callback()
+            .then(() => {
+                this.events.emit("success");
+            })
+            .catch((error) => {
+                this.events.emit("error", error);
+            })
+            .finally(() => {
+                if (this.enabled) {
+                    this.next = setTimeout(() => this.execute(), this.interval);
+                }
+            });
     }
 
     on(event, cb) {

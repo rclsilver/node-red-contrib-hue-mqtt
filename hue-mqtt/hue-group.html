@@ -21,79 +21,97 @@
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('hue-group', {
-        category: 'Hue MQTT',
-        color: '#f94f8b',
+    RED.nodes.registerType("hue-group", {
+        category: "Hue MQTT",
+        color: "#f94f8b",
         defaults: {
-            name: { value: '' },
-            bridge: { type: 'hue-bridge', required: true },
-            group: { value: '', required: false },
+            name: { value: "" },
+            bridge: { type: "hue-bridge", required: true },
+            group: { value: "", required: false },
         },
         inputs: 1,
         outputs: 1,
         inputLabels: function (i) {
-            return this._('hue-group.node.input');
+            return this._("hue-group.node.input");
         },
         outputLabels: function (i) {
-            return this._('hue-group.node.output');
+            return this._("hue-group.node.output");
         },
-        align: 'right',
-        icon: 'hue-group.png',
+        align: "right",
+        icon: "hue-group.png",
         paletteLabel: function () {
-            return this._('hue-group.node.title');
+            return this._("hue-group.node.title");
         },
         label: function () {
-            return this.name || this._('hue-group.node.title');
+            return this.name || this._("hue-group.node.title");
         },
         oneditprepare: function () {
             var node = this;
 
             function manual() {
-                var current = $('#node-input-group').val();
-                $('#node-input-group').replaceWith('<input type="text" id="node-input-group" style="width: 100%"/>');
-                $('#node-input-group').val(current);
+                var current = $("#node-input-group").val();
+                $("#node-input-group").replaceWith(
+                    '<input type="text" id="node-input-group" style="width: 100%"/>'
+                );
+                $("#node-input-group").val(current);
             }
 
             function search() {
-                const current = $('#node-input-group').val();
-                $('#node-input-group').replaceWith('<select id="node-input-group" style="width: 100%"></select>');
-                $('#node-input-group').append('<option selected="selected" value="null">' + node._("hue-group.config.searching") + '</option>');
+                const current = $("#node-input-group").val();
+                $("#node-input-group").replaceWith(
+                    '<select id="node-input-group" style="width: 100%"></select>'
+                );
+                $("#node-input-group").append(
+                    '<option selected="selected" value="null">' +
+                        node._("hue-group.config.searching") +
+                        "</option>"
+                );
 
-                const bridge = RED.nodes.node($('#node-input-bridge option:selected').val());
-                $.get('hue/groups', { bridge: bridge.bridge, key: bridge.key })
-                    .done(data => {
+                const bridge = RED.nodes.node(
+                    $("#node-input-bridge option:selected").val()
+                );
+                $.get("hue/groups", { bridge: bridge.bridge, key: bridge.key })
+                    .done((data) => {
                         var results = JSON.parse(data);
 
                         if (results.length <= 0) {
-                            RED.notify(node._('hue-group.config.none-found'), 'error');
+                            RED.notify(
+                                node._("hue-group.config.none-found"),
+                                "error"
+                            );
                         }
 
                         // Clear select component
-                        $('#node-input-group').empty();
+                        $("#node-input-group").empty();
 
                         // Add found sensors into the select component
                         results.forEach(function (group) {
-                            $('#node-input-group').append(`<option value="${group.id}">${group.name}</option>`);
+                            $("#node-input-group").append(
+                                `<option value="${group.id}">${group.name}</option>`
+                            );
                         });
 
                         // Select the current value
-                        $('#node-input-group').val(current);
+                        $("#node-input-group").val(current);
                     })
                     .fail(function () {
-                        RED.notify(node._('hue-group.config.unknown-error'), 'error');
+                        RED.notify(
+                            node._("hue-group.config.unknown-error"),
+                            "error"
+                        );
                     });
             }
 
-            $(document).on('change', '#node-input-group', function () {
-                var name = $('#node-input-group option:selected').text();
+            $(document).on("change", "#node-input-group", function () {
+                var name = $("#node-input-group option:selected").text();
 
                 if (name.length > 0) {
-                    $('#node-input-name').val(name);
+                    $("#node-input-name").val(name);
                 }
             });
 
-            $('#node-config-input-scan').click(function () {
-                if ($('#node-input-group').prop('tagName') === 'INPUT') {
+            $("#node-config-input-scan").click(function () {
+                if ($("#node-input-group").prop("tagName") === "INPUT") {
                     search();
                 } else {
                     manual();

@@ -1,4 +1,4 @@
-const moment = require('moment');
+const moment = require("moment");
 
 module.exports = class HueBrightnessMessage {
     constructor(sensor) {
@@ -15,7 +15,7 @@ module.exports = class HueBrightnessMessage {
                 updated: moment.utc(sensor.state.lastUpdated).local().format(),
             },
 
-            type: 'brightness',
+            type: "brightness",
 
             info: {
                 id: sensor.id,

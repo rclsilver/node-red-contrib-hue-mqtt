@@ -1,4 +1,4 @@
-const moment = require('moment');
+const moment = require("moment");
 
 module.exports = class HueMotionMessage {
     constructor(sensor, active = undefined) {
@@ -9,11 +9,13 @@ module.exports = class HueMotionMessage {
         this.message = {
             payload: {
                 active: active,
-                motion: (active && sensor.state.presence) ? true : false,
-                updated: (sensor.state.lastUpdated) ? moment.utc(sensor.state.lastUpdated).local().format() : moment().local().format()
+                motion: active && sensor.state.presence ? true : false,
+                updated: sensor.state.lastUpdated
+                    ? moment.utc(sensor.state.lastUpdated).local().format()
+                    : moment().local().format(),
             },
 
-            type: 'motion',
+            type: "motion",
 
             info: {
                 id: sensor.id,
@@ -27,8 +29,8 @@ module.exports = class HueMotionMessage {
                     manufacturer: sensor.model.manufacturer,
                     name: sensor.model.name,
                     type: sensor.model.type,
-                }
-            }
+                },
+            },
         };
     }
 

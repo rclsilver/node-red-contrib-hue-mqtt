@@ -10,28 +10,28 @@
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('hue-mqtt-in', {
-        category: 'Hue MQTT',
-        color: '#347aeb',
+    RED.nodes.registerType("hue-mqtt-in", {
+        category: "Hue MQTT",
+        color: "#347aeb",
         defaults: {
-            name: { value: '' },
-            bridge: { type: 'hue-bridge', required: true },
+            name: { value: "" },
+            bridge: { type: "hue-bridge", required: true },
         },
         inputs: 1,
         outputs: 1,
         inputLabels: function () {
-            return this._('hue-mqtt-in.node.input');
+            return this._("hue-mqtt-in.node.input");
         },
         outputLabels: function () {
-            return this._('hue-mqtt-in.node.output');
+            return this._("hue-mqtt-in.node.output");
         },
-        align: 'left',
-        icon: 'inject.svg',
+        align: "left",
+        icon: "inject.svg",
         paletteLabel: function () {
-            return this._('hue-mqtt-in.node.title');
+            return this._("hue-mqtt-in.node.title");
         },
         label: function () {
-            return this.name || this._('hue-mqtt-in.node.title');
+            return this.name || this._("hue-mqtt-in.node.title");
         },
     });
 </script>

@@ -1,0 +1,17 @@
+{
+    "hue-cache": {
+        "config": {
+            "name": "Name",
+            "input-name": "Name",
+            "bridge": "Bridge"
+        },
+        "node": {
+            "title": "Hue Cache",
+            "not-configured": "not configured",
+            "input": "manual refresh",
+            "output-initial": "initial cache state",
+            "output-refresh": "refreshed cache state",
+            "unknown-error": "Something went wrong. Please retry."
+        }
+    }
+}
