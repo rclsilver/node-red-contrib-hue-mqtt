@@ -45,6 +45,10 @@ module.exports = class HueSwitchMessage {
     }
 
     getButtonAction(event) {
+        if (!event) {
+            return null;
+        }
+
         const action = parseInt(event.toString().substring(3));
 
         if (action == 0) {
