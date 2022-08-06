@@ -8,43 +8,30 @@ module.exports = function (RED) {
 
         // Build the local cache
         node.refresh = () => {
-            return new Promise((resolve, reject) => {
-                node.client.lights
-                    .getAll()
-                    .then((bridge_lights) => {
-                        node.client.sensors
-                            .getAll()
-                            .then((bridge_sensors) => {
-                                node.client.groups
-                                    .getAll()
-                                    .then((bridge_groups) => {
-                                        cache.light = bridge_lights;
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const lights = await node.client.lights.getAll();
+                    const sensors = await node.client.sensors.getAll();
+                    const groups = await node.client.groups.getAll();
 
-                                        cache.sensor = bridge_sensors.filter(
-                                            (sensor) => {
-                                                return (
-                                                    [
-                                                        "ZLLPresence",
-                                                        "ZLLLightLevel",
-                                                        "ZLLTemperature",
-                                                        "ZLLSwitch",
-                                                    ].indexOf(
-                                                        sensor.attributes
-                                                            .attributes.type
-                                                    ) !== -1
-                                                );
-                                            }
-                                        );
+                    cache.light = lights;
+                    cache.sensor = sensors.filter((sensor) => {
+                        return (
+                            [
+                                "ZLLPresence",
+                                "ZLLLightLevel",
+                                "ZLLTemperature",
+                                "ZLLSwitch",
+                            ].indexOf(sensor.attributes.attributes.type) !== -1
+                        );
+                    });
+                    cache.group = groups;
 
-                                        cache.group = bridge_groups;
-
-                                        resolve();
-                                    })
-                                    .catch(reject);
-                            })
-                            .catch(reject);
-                    })
-                    .catch(reject);
+                    resolve();
+                } catch (e) {
+                    console.error(e);
+                    reject(e);
+                }
             });
         };
 

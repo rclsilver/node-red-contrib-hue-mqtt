@@ -1,0 +1,7 @@
+{
+    "hue-mqtt-in": {
+        "node": {
+            "title": "Hue MQTT in"
+        }
+    }
+}
